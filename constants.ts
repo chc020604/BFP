@@ -17,9 +17,16 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '드론 500대',
     coordinates: { lat: 35.1532, lng: 129.1186 },
     transport: {
-        parking: '광안리 공영주차장 (30분 1000원), 민락매립지 공영주차장 이용 가능',
+        parking: [
+            { name: '광안리 공영주차장', type: '공영', address: '부산 수영구 남천바다로 33번길 17' },
+            { name: '민락매립지 공영주차장', type: '공영', address: '부산 수영구 민락수변로 17번길 36' },
+            { name: '수영구청 주차장', type: '관공서', address: '부산 수영구 남천동 148-15' }
+        ],
         subway: '2호선 금련산역 3번 출구 도보 10분, 광안역 3번 출구 도보 15분',
-        bus: '41, 42, 108-1번 버스 탑승 후 광안리 해수욕장 하차'
+        bus: [
+            { stopName: '광안리해수욕장', routes: ['41', '42', '108-1', '38'] },
+            { stopName: '광안역', routes: ['20', '39', '51', '131'] }
+        ]
     }
   },
   {
@@ -35,9 +42,15 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '유명 마술사 이은결, 인디밴드',
     coordinates: { lat: 35.0518, lng: 129.0858 },
     transport: {
-        parking: '태종대 유원지 부설 주차장 이용 (일주차 3000원)',
-        subway: '1호선 남포역 6번 출구에서 버스 환승',
-        bus: '8, 30, 66, 88, 101번 버스 종점 하차'
+        parking: [
+             { name: '태종대 유원지 부설 주차장', type: '유료', address: '부산 영도구 전망로 24' },
+             { name: '자유랜드 공영주차장', type: '공영', address: '부산 영도구 동삼동 100' }
+        ],
+        subway: '1호선 남포역 6번 출구에서 버스 환승 (8, 30, 186번)',
+        bus: [
+             { stopName: '태종대(종점)', routes: ['8', '30', '66', '88', '101', '186'] },
+             { stopName: '태종대온천', routes: ['8', '30', '88'] }
+        ]
     }
   },
   {
@@ -53,9 +66,16 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '참여 작가 300명',
     coordinates: { lat: 35.1691, lng: 129.1361 },
     transport: {
-        parking: '벡스코 제1전시장 지하주차장 (승용차 10분 350원)',
-        subway: '2호선 센텀시티역 1번 출구, 벡스코역 7번 출구',
-        bus: '5-1, 39, 40, 63, 100, 100-1번 벡스코 정류장 하차'
+        parking: [
+             { name: '벡스코 제1전시장 지하주차장', type: '유료', address: '부산 해운대구 APEC로 55' },
+             { name: '벡스코 제2전시장 주차장', type: '유료', address: '부산 해운대구 APEC로 30' },
+             { name: '시립미술관 주차장', type: '유료', address: '부산 해운대구 APEC로 58' }
+        ],
+        subway: '2호선 센텀시티역 1번 출구(도보 1분) 또는 벡스코역 7번 출구',
+        bus: [
+            { stopName: '벡스코', routes: ['5-1', '39', '40', '63', '100', '115-1', '141', '155'] },
+            { stopName: '센텀시티역.벡스코', routes: ['31', '100', '200', '307(좌석)'] }
+        ]
     }
   },
   {
@@ -71,9 +91,12 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '-',
     coordinates: { lat: 35.1532, lng: 129.1186 },
     transport: {
-        parking: '행사 당일 교통 통제로 주차 불가, 대중교통 이용 필수',
-        subway: '2호선 광안역, 금련산역 하차',
-        bus: '행사 당일 우회 운행 예정'
+        parking: [],
+        subway: '2호선 광안역 3,5번 출구 또는 금련산역 3,5번 출구 (도보 15분)',
+        bus: [
+            { stopName: '교통통제구역', routes: ['행사 당일 버스 우회 운행 예정'] },
+            { stopName: '수영중학교', routes: ['42', '49', '62', '83', '108'] }
+        ]
     }
   },
   {
@@ -89,9 +112,14 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '지휘자 홍길동, 피아니스트 김철수',
     coordinates: { lat: 35.1294, lng: 129.0936 },
     transport: {
-        parking: '문화회관 내 주차장 무료 이용 (공연 관람객 4시간)',
+        parking: [
+            { name: '부산문화회관 부설주차장', type: '무료(4시간)', address: '부산 남구 대연동 848-4' }
+        ],
         subway: '2호선 대연역 3번, 5번 출구 도보 15분',
-        bus: '51, 68, 134, 138번 석포초등학교 하차'
+        bus: [
+            { stopName: '문화회관', routes: ['남구9', '남구10(마을)'] },
+            { stopName: '석포초등학교', routes: ['51', '68', '134', '138'] }
+        ]
     }
   },
   {
@@ -107,9 +135,15 @@ export const MOCK_EVENTS: CultureEvent[] = [
     cast: '-',
     coordinates: { lat: 35.1692, lng: 129.1385 },
     transport: {
-        parking: '미술관 주차장 이용 (유료, 관람객 할인)',
+        parking: [
+            { name: '부산시립미술관 주차장', type: '유료', address: '부산 해운대구 APEC로 58' },
+            { name: '벡스코 제2전시장', type: '유료', address: '부산 해운대구 APEC로 30' }
+        ],
         subway: '2호선 벡스코역 5번 출구 바로 앞',
-        bus: '31, 39, 40, 63, 100, 100-1번 올림픽교차로 환승센터 하차'
+        bus: [
+            { stopName: '올림픽교차로 환승센터', routes: ['31', '39', '40', '63', '100', '100-1', '115-1'] },
+            { stopName: '벡스코역', routes: ['5-1', '155', '307'] }
+        ]
     }
   }
 ];

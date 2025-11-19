@@ -23,39 +23,15 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
     return date.toISOString().replace(/-|:|\.\d\d\d/g, "").substring(0, 8);
   };
 
-  const handleAddToCalendar = (type: 'google' | 'ics') => {
+  const handleAddToCalendar = () => {
     const start = formatDateForCalendar(event.dateStart);
     const end = formatDateForCalendar(event.dateEnd, true);
     const title = event.title;
     const details = `${event.description}\n\n장소: ${event.location}\n\nBFP에서 보기: ${window.location.href}`;
     const location = event.location;
 
-    if (type === 'google') {
-        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
-        window.open(url, '_blank');
-    } else if (type === 'ics') {
-        // Standard ICS format
-        const icsContent = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'BEGIN:VEVENT',
-            `DTSTART;VALUE=DATE:${start}`,
-            `DTEND;VALUE=DATE:${end}`,
-            `SUMMARY:${title}`,
-            `DESCRIPTION:${details.replace(/\n/g, '\\n')}`,
-            `LOCATION:${location}`,
-            'END:VEVENT',
-            'END:VCALENDAR'
-        ].join('\n');
-
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', `${title.replace(/\s+/g, '_')}.ics`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -107,7 +83,6 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
                 </h3>
                 <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed min-h-[100px] h-auto whitespace-pre-line">
                     {event.description}
-                    {/* Simulated longer description content for demo if description is short */}
                     {event.description.length < 100 && (
                         <p className="mt-4 text-slate-500 text-sm">
                             <br/>
@@ -191,20 +166,13 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
                     </button>
 
                     {/* Calendar Actions */}
-                    <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div className="mt-3">
                         <button 
-                            onClick={() => handleAddToCalendar('google')}
-                            className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all text-xs font-bold"
+                            onClick={handleAddToCalendar}
+                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all text-xs font-bold"
                         >
                             <i className="fab fa-google"></i>
-                            구글 캘린더
-                        </button>
-                        <button 
-                             onClick={() => handleAddToCalendar('ics')}
-                             className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300 transition-all text-xs font-bold"
-                        >
-                            <i className="far fa-calendar-plus"></i>
-                            ICS 다운로드
+                            구글 캘린더에 추가
                         </button>
                     </div>
                 </div>
@@ -231,22 +199,59 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
                         ))}
                     </div>
 
-                    {/* Tab Content */}
-                    <div className="min-h-[80px] flex items-center justify-center text-center">
+                    {/* Tab Content - List View */}
+                    <div className="min-h-[80px] flex flex-col justify-center">
                         {activeTransportTab === 'parking' && (
-                            <p className="text-sm text-slate-600">
-                                {event.transport?.parking || "주변 주차장 정보가 없습니다."}
-                            </p>
+                            <div className="space-y-3">
+                                {event.transport?.parking && event.transport.parking.length > 0 ? (
+                                    event.transport.parking.map((lot, idx) => (
+                                        <div key={idx} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className="font-bold text-slate-700 text-sm">{lot.name}</span>
+                                                <span className="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-bold">{lot.type}</span>
+                                            </div>
+                                            <p className="text-xs text-slate-500">{lot.address}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-sm text-slate-600 text-center py-4">주변 주차장 정보가 없습니다.</p>
+                                )}
+                            </div>
                         )}
+
                         {activeTransportTab === 'subway' && (
-                             <p className="text-sm text-slate-600">
-                                {event.transport?.subway || "주변 지하철 정보가 없습니다."}
-                            </p>
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                <div className="inline-block p-2 bg-white rounded-full shadow-sm mb-2">
+                                     <i className="fas fa-subway text-orange-500 text-xl"></i>
+                                </div>
+                                <p className="text-sm font-bold text-slate-700 leading-relaxed">
+                                    {event.transport?.subway || "주변 지하철 정보가 없습니다."}
+                                </p>
+                            </div>
                         )}
+
                         {activeTransportTab === 'bus' && (
-                             <p className="text-sm text-slate-600">
-                                {event.transport?.bus || "주변 버스 정보가 없습니다."}
-                            </p>
+                             <div className="space-y-3">
+                                {event.transport?.bus && event.transport.bus.length > 0 ? (
+                                    event.transport.bus.map((stop, idx) => (
+                                        <div key={idx} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <i className="fas fa-bus-alt text-slate-400 text-xs"></i>
+                                                <span className="font-bold text-slate-700 text-sm">{stop.stopName}</span>
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {stop.routes.map((route, rIdx) => (
+                                                    <span key={rIdx} className="inline-block bg-white border border-blue-100 text-blue-600 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                                        {route}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                     <p className="text-sm text-slate-600 text-center py-4">주변 버스 정보가 없습니다.</p>
+                                )}
+                            </div>
                         )}
                     </div>
                 </div>

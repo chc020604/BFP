@@ -27,9 +27,12 @@ export const fetchEventsFromGemini = async (
     
     Ensure the dates are within this specific month.
     Use realistic location names in Busan (e.g., BEXCO, Gwangalli, Busan Cultural Center).
-    Provide realistic pricing, cast info (or '-'), and transport info.
-    For coordinates, provide approximate lat/lng for the location in Busan.
-    For image URLs, use placeholder images from picsum.photos.
+    Provide realistic pricing, cast info (or '-').
+    For coordinates, provide approximate lat/lng for the location.
+    
+    IMPORTANT: Provide DETAILED transport info.
+    - Parking: List 2-3 nearby parking lots with name, type (Public/Private/Paid), and approximate address.
+    - Bus: List 2 nearby bus stops and the bus route numbers that stop there.
   `;
 
   try {
@@ -63,9 +66,31 @@ export const fetchEventsFromGemini = async (
               transport: {
                   type: Type.OBJECT,
                   properties: {
-                      parking: { type: Type.STRING },
+                      parking: { 
+                          type: Type.ARRAY,
+                          items: {
+                              type: Type.OBJECT,
+                              properties: {
+                                  name: { type: Type.STRING },
+                                  type: { type: Type.STRING },
+                                  address: { type: Type.STRING }
+                              }
+                          }
+                      },
                       subway: { type: Type.STRING },
-                      bus: { type: Type.STRING }
+                      bus: { 
+                          type: Type.ARRAY,
+                          items: {
+                              type: Type.OBJECT,
+                              properties: {
+                                  stopName: { type: Type.STRING },
+                                  routes: { 
+                                      type: Type.ARRAY,
+                                      items: { type: Type.STRING }
+                                  }
+                              }
+                          }
+                      }
                   }
               }
             },
@@ -79,7 +104,7 @@ export const fetchEventsFromGemini = async (
     if (!text) return MOCK_EVENTS;
     
     const data = JSON.parse(text) as CultureEvent[];
-    // Ensure categories align exactly
+    // Ensure categories align exactly and add placeholder images
     return data.map(e => ({
         ...e,
         imageUrl: `https://picsum.photos/400/500?random=${Math.random()}`, 

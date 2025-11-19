@@ -13,13 +13,34 @@ const EventGrid: React.FC<EventGridProps> = ({ events, loading, hasSearch, onEve
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm h-[450px] animate-pulse">
-            <div className="h-3/4 bg-slate-200"></div>
-            <div className="p-4 space-y-2">
-              <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-              <div className="h-3 bg-slate-200 rounded w-1/2"></div>
-            </div>
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 h-[480px] relative">
+             {/* Shimmer Effect Wrapper */}
+             <div className="animate-pulse flex flex-col h-full">
+                {/* Image Skeleton with Sunset Hint */}
+                <div className="h-[65%] bg-gradient-to-br from-slate-200 via-rose-50 to-slate-200 relative">
+                    {/* Date Badge Skeleton */}
+                    <div className="absolute top-3 left-3 w-24 h-7 bg-white/60 backdrop-blur-sm rounded-full"></div>
+                </div>
+                
+                {/* Content Skeleton */}
+                <div className="p-6 flex-1 flex flex-col justify-center space-y-4">
+                    {/* Title */}
+                    <div className="h-7 bg-slate-200 rounded-md w-3/4"></div>
+                    
+                    {/* Meta info (Location/Date) */}
+                    <div className="flex items-center space-x-2">
+                         <div className="w-4 h-4 bg-rose-200/50 rounded-full"></div>
+                         <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+                    </div>
+                    
+                    {/* Description lines */}
+                    <div className="space-y-2 pt-2">
+                        <div className="h-3 bg-slate-100 rounded w-full"></div>
+                        <div className="h-3 bg-slate-100 rounded w-5/6"></div>
+                    </div>
+                </div>
+             </div>
           </div>
         ))}
       </div>

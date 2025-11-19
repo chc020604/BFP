@@ -3,10 +3,21 @@ export enum EventCategory {
   FESTIVAL = 'FESTIVAL'       // 축제/행사
 }
 
+export interface ParkingInfo {
+  name: string;
+  type: string; // e.g., '공영', '민영', '유료'
+  address: string;
+}
+
+export interface BusInfo {
+  stopName: string;
+  routes: string[];
+}
+
 export interface TransportInfo {
-  parking?: string;
+  parking?: ParkingInfo[];
   subway?: string;
-  bus?: string;
+  bus?: BusInfo[];
 }
 
 export interface Coordinates {
